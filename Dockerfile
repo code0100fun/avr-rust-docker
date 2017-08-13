@@ -12,6 +12,11 @@ RUN apt-get -y update && \
         build-essential \
         git \
         wget \
+        gcc-avr \
+        binutils-avr \
+        avr-libc \
+        gdb-avr \
+        avrdude \
         python-pip \
         curl
 
