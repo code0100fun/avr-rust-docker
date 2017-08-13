@@ -12,7 +12,10 @@ RUN apt-get -y update && \
         build-essential \
         git \
         wget \
+        python-pip \
         curl
+
+RUN pip install docopt==0.6.2
 
 RUN wget https://cmake.org/files/v3.9/$CMAKE.tar.gz -O /usr/src/$CMAKE.tar.gz && \
         mkdir -p /usr/src && \
