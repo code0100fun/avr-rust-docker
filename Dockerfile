@@ -34,15 +34,19 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 # rustup directory
 ENV PATH /root/.cargo/bin:$PATH
 
-RUN git clone -b avr-support https://github.com/avr-rust/rust.git /usr/src/avr-rust
+RUN git clone -b avr-support https://github.com/avr-rust/rust.git /usr/src/avr-rust && \
+        cd /usr/src/avr-rust && \
+        ./configure && make && \
+        mkdir /usr/src/avr-rust-tmp && \
+        mv /usr/src/avr-rust/build/x86_64-unknown-linux-gnu/stage1/ /usr/src/avr-rust-tmp/ && \
+        rm -rf /usr/src/avr-rust && \
+        mv /usr/src/avr-rust-tmp /usr/src/avr-rust
 
-WORKDIR /usr/src/avr-rust
-RUN ls -la
-RUN mkdir build
-RUN cd build && ../configure
-RUN cd build && make
+RUN rustup toolchain link avr-rust /usr/src/avr-rust/stage1
+RUN rustup default avr-rust
 
 RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
 
 COPY ./entrypoint.py /usr/bin
 ENTRYPOINT ["python", "/usr/bin/entrypoint.py"]
